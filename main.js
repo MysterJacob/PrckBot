@@ -4,8 +4,6 @@ const fs = require('fs');
 const crypto = require('crypto');
 
 const config = JSON.parse(fs.readFileSync('config.json'));
-const versions = JSON.parse(fs.readFileSync('version.json'));
-
 
 const encryptedtoken = config.token;
 console.log(encryptedtoken)
