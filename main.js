@@ -6,7 +6,6 @@ const crypto = require('crypto');
 const config = JSON.parse(fs.readFileSync('config.json'));
 
 const encryptedtoken = config.token;
-console.log(encryptedtoken)
 const token = new Buffer.from(encryptedtoken, 'base64').toString('ascii');
 
 const prefix = config.prefix;
