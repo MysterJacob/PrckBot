@@ -1,0 +1,34 @@
+{
+    "discord":{
+        "points":[
+            {"name":"Podmiot pierwszy","desc":"Nadmierne wyzywanie i/lub przeklinanie na kanałach tekstowych/głosowych jest zabronione."},
+            {"name":"Podmiot drugi","desc":"Szanuj osoby, z którymi piszesz/rozmawiasz."},
+            {"name":"Podmiot trzeci","desc":"Zakaz masowego pingowania (tj. @everyone, @here) bez zgody administracji lub właściciela serwera, za to grozi min. kick"}, 
+            {"name":"Podmiot czwarty","desc":"Nie możecie się podszywać pod inne osoby/postacie."}, 
+            {"name":"Podmiot piąty" , "desc":"Nieznajomość regulaminu nie zwalnia cię z jego przestrzegania. Jeżeli masz jakiś problem z serwerem/regulaminem to piszcie do gracza scp (prorocka)."}
+        ],
+        "title":"Regulamin serwera Discord \n Jego nie znajomość nie zwalnia z jego przesterzegania ",
+        "description":"Poniższy regualmin dotyczy tego serwera Discord",
+        "color":"#ff0000",
+        "image":"https://lh3.googleusercontent.com/_4zBNFjA8S9yjNB_ONwqBvxTvyXYdC7Nh1jYZ2x6YEcldBr2fyijdjM2J5EoVdTpnkA",
+        "footer":"Administracja zastrzega sobie prawo do zmiany regulaminu w dowolnym momencie"
+    },
+    "minecraft":{
+        "points":[
+            {"name":"Podmiot pierwszy","desc":"Zakazane jest Teamkilowanie (pod regulaminem jest spis drużyn)."},
+            {"name":"Podmiot drugi","desc":"Szanuj osoby, z którymi piszesz/rozmawiasz."},
+            {"name":"Podmiot trzeci","desc":"Zakaz użyawania jakichkolwiek cheatów"}, 
+            {"name":"Podmiot czwarty","desc":"Nie możecie się podszywać pod inne osoby/postacie."}, 
+            {"name":"Podmiot piąty" , "desc":"Zakaz spawnkilowania (zasada 10 skund) (kiedy ci który się zrespili zaczeli strzelać bądź wybiegli z swojego respu ,to już wtedy można strzelać) Zakaz RDM ."},
+            {"name":"Podmiot szósty","desc":"Zakaz używania bugów(wszystkie bugi zgłaszać aministracji"},
+            {"name":"Podmiot siódmy","desc":"zakaz pixelwalkingu (wchodzenia w niedostępne miejsca dla scp i innych klas"},
+            {"name":"Spis dozwolonych sojuszy","desc":"KlasaD-SCP , Naukowcy-KlasaD , Ci-SCP , SCP999-Każdy , SCP035-naukowcy , SCP001-KlasaD"},
+            {"name":"Spis obowiąskowych sojuszy","desc":"KlasaD/SCP035-CI , SCP001-MTF/Naukowcy , SCP035/SCP001-SCP"}
+        ], 
+        "title":"Regulamin serwera Discord \n Jego nie znajomość nie zwalnia z jego przesterzegania ",
+        "description":"Poniższy regualmin dotyczy tego serwera Minecraft",
+        "color":"#ff0000",
+        "image":"https://www.minecraft.net/etc.clientlibs/minecraft/clientlibs/main/resources/img/iso-grassblock.png",
+        "footer":"Administracja zastrzega sobie prawo do zmiany regulaminu w dowolnym momencie"
+    }
+}
