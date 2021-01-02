@@ -326,7 +326,7 @@ module.exports.config = {
     usage:'report [nazwa użytkowinika] [powód]',
     descripton:'Komenda, która służy do zgłaszania użytkowników naszego serwera miecraft',
     premissionLevel:0,
-    // 0-Everyone 1-Mods 2-Admins 3-Owner 4-Bot owner
+    // 0-Everyone 1-Mods 2-Admins 3-Mods 4-Owner 6-Bot owner
     runtype:2,
     // 0-Everywhere 1-Only servers 2-Only dms
     accurate_descripton:'Zgłasza użytkownika, może zostać użyta tylko w bezpośrediniej konwersacji z botem',

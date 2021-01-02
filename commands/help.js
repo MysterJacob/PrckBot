@@ -64,7 +64,7 @@ module.exports.config = {
     usage:'help [komenda]*',
     descripton:'Wyświetla strone pomocy',
     premissionLevel:0,
-    // 0-Everyone 1-Mods 2-Admins 3-Owner 4-Bot owner
+    // 0-Everyone 1-Mods 2-Admins 3-Mods 4-Owner 6-Bot owner
     runtype:0,
     // 0-Everywhere 1-Only servers 2-Only dms
     accurate_descripton:'Bez argumentów podaje listę wszystkich komend,z podaną nazwą wyświetla dokładny opis komendy',

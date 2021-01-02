@@ -23,7 +23,7 @@ module.exports.config = {
     usage:'botinfo',
     descripton:'Wyświetla informacje o bocie',
     premissionLevel:0,
-    // 0-Everyone 1-Mods 2-Admins 3-Owner 4-Bot owner
+    // 0-Everyone 1-Mods 2-Admins 3-Mods 4-Owner 6-Bot owner
     runtype:0,
     // 0-Everywhere 1-Only servers 2-Only dms
     accurate_descripton:'Wyświetla dokładne informacje o bocie, takie jak data dołączenia,twórca, cel itp.',

@@ -31,8 +31,8 @@ module.exports.config = {
     alias:[],
     usage:'resendwelcomemessage',
     descripton:'Resends welcome message',
-    premissionLevel:4,
-    // 0-Everyone 1-Mods 2-Admins 3-Owner 4-Bot owner 5-No one ?
+    premissionLevel:5,
+    // 0-Everyone 1-Mods 2-Admins 3-Mods 4-Owner 6-Bot owner
     runtype:1,
     // 0-Everywhere 1-Only servers 2-Only dms
     accurate_descripton:'Resends welcome message',
