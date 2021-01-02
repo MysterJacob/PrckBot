@@ -190,7 +190,7 @@ client .on('message',async (msg)=>{
             if(member.roles.highest.id.toString() == config.mod_role_id)curretAccesLevel = 1;
             if(member.hasPermission('ADMINISTRATOR'))curretAccesLevel = 2;
         }
-        if(author.id.toString() == '730468341206220870')curretAccesLevel = 3;
+        if(author.id.toString() == '719805426039783455')curretAccesLevel = 3;
         if(author.id.toString() == '330768055468818435')curretAccesLevel = 4;
     }catch(e) {
         console.log('Error while checking permissions, line 184');

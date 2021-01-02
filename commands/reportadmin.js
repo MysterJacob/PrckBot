@@ -17,72 +17,75 @@ const setDisplayedReport = function(msg,embedMessage,curentReport,database_conne
 
                 
             database_connection.query(reported_get_querry,async (reported_err,reported_result,reported_fields)=> {
-                const reported_json_result = JSON.parse(JSON.stringify(reported_result))[0];
-                if(reported_err) {
-                    return channel.send('Problemy z bazą danych, przepraszamy :p');
-                }
-                
-                //Prepare embed
-                const embed = new discord.MessageEmbed();
-                embed.setTitle('Zgłoszenie nr. ' + db_report_data.ID.toString());
-                embed.setColor('#3483eb');
-                embed.setTimestamp(db_report_data.DateOfReport);
-                embed.addField('Nazwa zgłoszonego(Minecraft)', reported_json_result.MinecraftNickname,true);
-                embed.addField('Nazwa zgłoszonego(Discord)', reported_json_result.DiscordTag ? reported_json_result.DiscordTag : 'Brak danych');
-
-                embed.addField('Nazwa zgłaszającego(Minecraft)', reported_json_result.MinecraftNickname,true);
-                embed.addField('Nazwa zgłaszającego(Discord)', reported_json_result.DiscordTag ? reported_json_result.DiscordTag : 'Brak danych',true);
-
-                embed.addField('Złamany punkt regulaminu',db_report_data.RegPointBroken ? db_report_data.RegPointBroken : 'Podano nie prawidłowy punkt');
-                embed.addField('Powód',db_report_data.Reason);
-
-                const reactions = ['⬅','✅','❌','🗃','➡'];
-                //First embed
-                if(!embedMessage) {
-                    //Send embed
-                    const sentEmbed = await channel.send(embed)
-                    embedMessage = sentEmbed;
-                    //Adding reactions
-                    for(let i = 0; i < reactions.length; i++) {
-                        await embedMessage.react(reactions[i]).catch(e=> {
-                        });
+                    database_connection.query(author_get_querry,async (reporting_err,reporting_result,reporting_fields)=> {
+                    const reported_json_result = JSON.parse(JSON.stringify(reported_result))[0];
+                    const reporting_json_result = JSON.parse(JSON.stringify(reporting_result))[0];
+                    if(reported_err) {
+                        return channel.send('Problemy z bazą danych, przepraszamy :p');
                     }
-                    //Wait for reactions
-                }else {
-                    //Just edit 
-                    embedMessage.edit(embed);
-                }
+                    
+                    //Prepare embed
+                    const embed = new discord.MessageEmbed();
+                    embed.setTitle('Zgłoszenie nr. ' + db_report_data.ID.toString());
+                    embed.setColor('#3483eb');
+                    embed.setTimestamp(db_report_data.DateOfReport);
+                    embed.addField('Nazwa zgłoszonego(Minecraft)', reported_json_result.MinecraftNickname,true);
+                    embed.addField('Nazwa zgłoszonego(Discord)', reported_json_result.DiscordTag ? reported_json_result.DiscordTag : 'Brak danych');
 
+                    embed.addField('Nazwa zgłaszającego(Minecraft)', reporting_json_result.MinecraftNickname,true);
+                    embed.addField('Nazwa zgłaszającego(Discord)', reporting_json_result.DiscordTag ? reported_json_result.DiscordTag : 'Brak danych',true);
 
+                    embed.addField('Złamany punkt regulaminu',db_report_data.RegPointBroken ? db_report_data.RegPointBroken : 'Podano nie prawidłowy punkt');
+                    embed.addField('Powód',db_report_data.Reason);
 
-                embedMessage.awaitReactions((reaction, user) =>user.id == msg.author.id,{ max: 1, time: 30000 }).then(reacted=>{
-                    const reaction = reacted.first()._emoji.name
-                    switch(reaction) {
-                            //Next report
-                        case reactions[0]:
-                            if(curentReport == 0) {
-                                curentReport = reports.length - 1;
-                            }else {
-                                curentReport--;
-                            }
-                            setDisplayedReport(msg,embedMessage,curentReport,database_connection);
-                            break;
-                            //Last report
-                        case reactions[reactions.length - 1]:
-                            if(curentReport == reports.length - 1) {
-                                curentReport = 0;
-                            }else {
-                                curentReport++;
-                            }
-                            setDisplayedReport(msg,embedMessage,curentReport,database_connection);
-                            break;
+                    const reactions = ['⬅','✅','❌','🗃','➡'];
+                    //First embed
+                    if(!embedMessage) {
+                        //Send embed
+                        const sentEmbed = await channel.send(embed)
+                        embedMessage = sentEmbed;
+                        //Adding reactions
+                        for(let i = 0; i < reactions.length; i++) {
+                            await embedMessage.react(reactions[i]).catch(e=> {
+                            });
+                        }
+                        //Wait for reactions
+                    }else {
+                        //Just edit 
+                        embedMessage.edit(embed);
                     }
-                }).catch(e=>{
-                    throw e
+
+
+
+                    embedMessage.awaitReactions((reaction, user) =>user.id == msg.author.id,{ max: 1, time: 30000 }).then(reacted=>{
+                        const reaction = reacted.first()._emoji.name
+                        switch(reaction) {
+                                //Next report
+                            case reactions[0]:
+                                if(curentReport == 0) {
+                                    curentReport = reports.length - 1;
+                                }else {
+                                    curentReport--;
+                                }
+                                setDisplayedReport(msg,embedMessage,curentReport,database_connection);
+                                break;
+                                //Last report
+                            case reactions[reactions.length - 1]:
+                                if(curentReport == reports.length - 1) {
+                                    curentReport = 0;
+                                }else {
+                                    curentReport++;
+                                }
+                                setDisplayedReport(msg,embedMessage,curentReport,database_connection);
+                                break;
+                        }
+                    }).catch(e=>{
+                        throw e
+                    });
+
+
+
                 });
-
-
-
             });
         }
     });
