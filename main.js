@@ -14,7 +14,6 @@ const mysql = require('mysql');
 
 const encryptedpassword = config.data_base_password;
 const password = new Buffer(encryptedpassword,'base64').toString('ascii');
-
 const connectionToDataBase = mysql.createConnection({
     host: config.data_base_host,
     user: config.data_base_user,
@@ -129,29 +128,42 @@ function check_pair_secret(author,msg) {
     });
     //  ------------------VERYFY------------------
 }
-client .on('message', (msg)=>{
+
+
+client .on('message',async (msg)=>{
     const author = msg.author;
     const member = msg.member;
+    //If bot then skip
     if(author.bot === true)return;
+
+    //If ping reply with prefix
     if(msg.mentions.users.first() && msg.mentions.users.first().id == client .user.id) {
-        msg.reply('Mój prefix to ' + config.prefix + '\r\t użyj komendy help aby dowiedzieć się więcej!');
+       return msg.reply('Mój prefix to ' + config.prefix + '\r\t użyj komendy help aby dowiedzieć się więcej!');
     }
+    //Auto react for ideas
+    if(msg.channel.id.toString() == "759080018730287154"){
+        try{
+            await msg.react("✅")
+            await msg.react("❌");
+        }catch(e){}
+    }
+
+    //Command stuff
     const messageArray = msg.content.split(' ');
     const commandName = messageArray[0];
     const args = messageArray.slice(1);
 
     const command = client.commands.get(commandName.slice(prefix.length).toLowerCase());
-    if(!command) {
-        return ;
-    }
+    //no command no problem
+    if(!command) {return ;}
 
-    if(msg.channel.type == 'dm') {
-        if(msg.content.substr(0,2) == '?>') {
-            check_pair_secret(msg.author,msg);
-        }
-        return;
+    //Check for pairing keyes
+    if(msg.channel.type == 'dm' && msg.content.substr(0,2) == '?>') {
+            check_pair_secret(msg.author,msg);  
     }
+    //Delete commands
     if(config.delete_commands)msg.delete();
+    //Channel type
     const runtype = command.config.runtype.toString();
     if(runtype != '0') {
         if(runtype == '1' && msg.channel.type == 'dm') {
@@ -171,6 +183,7 @@ client .on('message', (msg)=>{
             return;
         }
     }
+    //Premissions
     let curretAccesLevel = 0;
     try{
         if(msg.channel.type != 'dm') {
@@ -183,6 +196,7 @@ client .on('message', (msg)=>{
         console.log('Error while checking permissions, line 184');
     }
 
+    //Access Denided
     if(curretAccesLevel < command.config.premissionLevel) {
         msg.reply('Aby użyc tej komendy musisz być ' + ['moderatorem','administratorem','właścicielem serwera','właścicielem bota'][command.config.premissionLevel - 1]).then((message)=> {
             setTimeout(()=>{
@@ -191,15 +205,15 @@ client .on('message', (msg)=>{
         });
         return;
     }
-
+    //Run command
     try{
         command.run(client , msg, args,config,connectionToDataBase);
     } catch(e) {
         console.error(e);
     }
 
-
 });
+
 client .on('guildMemberAdd',(member)=> {
     member.send('\
     Hej,' + member.user.tag + ' na serwerze \r\t```' + member.guild.name + '```\r\t\
@@ -209,7 +223,7 @@ Jeśli połączysz konta z naszego serwera minecraft z twoim kontem, to:\r\t\
             oraz będą one dostępne za pomocą komendy na discrodzie\r\t\
         2.Jeśli grasz na naszym serwerze ponad rok to dostajesz range "Stały bywalec"\r\t\
         3.Uzyskasz łatwy dostęp do komedy report oraz twoje zgłoszenia będą rozpatrywane bardzo szybko\n\r\
-        4.Możesz sprawdzić stan serwera oraz ilośc graczy w każym momęcie\r\t\n\n\r \
+        4.Możesz sprawdzić stan serwera oraz ilośc graczy w każym momencie\r\t\n\n\r \
 Aby zweryfikować się dołącz na nasz serwer miecraft, dostaniesz wtedy kod dostępu, który wyślesz do mnie\r\t\r\
     na tej rozmowie prywatnej,poprzedzając go znakami "?>"\r\t\
     Przykładowy wiadomośc, którą masz wysłać do mnie wygląda tak ```?>TenKluczMa32LiteryINicNieZrobisz```\r\t\

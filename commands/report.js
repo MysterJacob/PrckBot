@@ -39,7 +39,7 @@ module.exports.run = function(client , msg, args,config,database_connection) {
                     if(err.length <= 0) {
                         msg.channel.send('Brak oczekiwanej odpowiedzi :(');
                     }else{
-                        msg.channel.send('Wystąpił nieoczekiwany błąd');
+                        msg.channel.send('Wystąpił nieoczekiwany błąd,lub skończył się czas na odpowiedź');
                         console.log(err);
                     }
                 });
@@ -128,7 +128,6 @@ module.exports.run = function(client , msg, args,config,database_connection) {
                             rmsg.channel.send('Znalezłem wielu użytkowników o podobnym nicku, prosze wybierz jednego...');
                             const result_embed_message = client .user.lastMessage;
                             const reactions = ['1️⃣','2️⃣','3️⃣','4️⃣','5️⃣','6️⃣','7️⃣','8️⃣','9️⃣','9️⃣'];
-                            console.log(result.length);
                             for(let i = 0 ; i < result.length; i++) {
                                 result_embed_message.react(reactions[i]).catch(e=> {console.log('error ');});
                             }
@@ -212,7 +211,7 @@ module.exports.run = function(client , msg, args,config,database_connection) {
                         return channel.send('Miałeś nie używać znaków specjalnych :angry: ');
                     }
                     reason = msgcontent;
-                    askForAnonymity();
+                    displayData();
                 })
                 .catch(err => {
                     if(err.length <= 0) {
@@ -222,38 +221,6 @@ module.exports.run = function(client , msg, args,config,database_connection) {
                         console.log(err);
                     }
                 });
-        });
-    }
-    function askForAnonymity() {
-        const filter = response => {
-            return response.author.id == msg.author.id;
-        };
-        channel.send('```Użytkownik ' + db_DiscordTag + ' zostanie poinformowany o ty, że został zgłoszony czy chcesz pozostać *dla niego* anonimowy?```').then(()=>{
-            const result_embed_message = client .user.lastMessage;
-            const reactions = ['✅','❌'];
-            for(let i = 0 ; i < 2; i++) {
-                result_embed_message.react(reactions[i]).catch(e=> {console.log(e);return -1;});
-            }
-
-            // eslint-disable-next-line no-shadow
-            const filter = (reaction, user) => {
-                return reactions.includes(reaction._emoji.name) && user.id === msg.author.id;
-            };
-            result_embed_message.awaitReactions(filter, { max: 1, time: 60000, errors: ['time'] }).then((reaction, user)=> {
-                const reported_discord_user = client .users.fetch(db_DiscordID).user;
-                console.log(reported_discord_user);
-                if(reported_discord_user) {
-                    if(reaction.first()._emoji.name == reactions[0]) {
-                        reported_discord_user.send('Zostałeś zgłoszony przez użytkownika ||' + msg.author.username + '|| za naruszenie regulaminu!');
-                    }else{
-                        reported_discord_user.send('Zostałeś zgłoszony przez użytkownika ||[UTAJNIONO]|| za naruszenie regulaminu!');
-                    }
-                }
-                displayData();
-            }).catch(e=> {
-                console.log(e);
-                return;
-            });
         });
     }
     function getData(playerID) {
@@ -267,6 +234,7 @@ module.exports.run = function(client , msg, args,config,database_connection) {
                     return channel.send('Przepraszamy ale mamy problemy z bazą danych, proszę spróbować ponownie później...');
                 }
                 const db_table = JSON.parse(JSON.stringify(result))[0];
+                console.log(db_table);
                 db_id = db_table.ID;
                 db_DiscordTag = db_table.DiscordTag;
                 db_DiscordID = db_table.DiscordID;
@@ -297,7 +265,8 @@ module.exports.run = function(client , msg, args,config,database_connection) {
         const embed = new discord.MessageEmbed();
         embed.setAuthor('Zgłoszenie');
         embed.addField('Nazwa gracza minecraft',db_MinecraftNickname,true);
-        embed.addField('Nazwa gracza disord',db_DiscordTag,true);
+        if(!db_DiscordTag){db_DiscordTag = "Brak danych"}
+        embed.addField('Discord tag gracza',db_DiscordTag,true);
         embed.addField('Status',db_IsOnline ? ':green_circle:Online' : ':red_circle:Offline');
         embed.addField('Ostatni raz na serwerze',db_DateOfLastJoin.slice(0,db_DateOfLastJoin.length - 5).replace('T',' | '),true);
         embed.addField('Pierwszy raz na serwerze',db_DateOfFirstJoin.slice(0,db_DateOfLastJoin.length - 5).replace('T',' | '),true);
@@ -324,7 +293,7 @@ module.exports.run = function(client , msg, args,config,database_connection) {
                     values += regulaminBreakpoint.toString() + '","';
                     values += reason.toString() + '","';
                     const date = new Date();
-                    values += date.toISOString() + '","';
+                    values += date.toISOString().slice(0, 19).replace('T', ' ') + '","';
                     values += '0","';
                     values += '0"';
                     values += ')';
@@ -333,7 +302,7 @@ module.exports.run = function(client , msg, args,config,database_connection) {
                     database_connection.query(inser_query,(err, result, fields)=> {
                         console.log(err);
                         if(err) {
-                            return channel.send('Problemy z bazą danych :{');
+                            return channel.send('Przepraszamy, problemy z bazą danych :{');
                         }else{
                             return channel.send('Zgłoszenie przyjęte :)');
                         }
