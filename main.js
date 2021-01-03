@@ -88,6 +88,10 @@ function check_pair_secret(author,msg) {
         connectionToDataBase.query(query,(err, result, fields)=> {
             if(result) {
                 const table_json = JSON.parse(JSON.stringify(result))[0];
+                if(!table_json){
+                    e_msg.edit('Nieprawidłowy klucz weryfikacjyjny');
+                    return;
+                }
                 const c_discord_id = table_json.DiscordID;
                 if(!c_discord_id) {
                     const minecraft_nickname = table_json.MinecraftNickname;
@@ -136,6 +140,9 @@ client .on('message',async (msg)=>{
     //If bot then skip
     if(author.bot === true)return;
 
+    if(msg.channel.type == 'dm' && msg.content.substr(0,2) == '?>') {
+        check_pair_secret(msg.author,msg);  
+    }
     //If ping reply with prefix
     if(msg.mentions.users.first() && msg.mentions.users.first().id == client .user.id) {
        return msg.reply('Mój prefix to ' + config.prefix + '\r\t użyj komendy help aby dowiedzieć się więcej!');
@@ -157,10 +164,7 @@ client .on('message',async (msg)=>{
     //no command no problem
     if(!command) {return ;}
 
-    //Check for pairing keyes
-    if(msg.channel.type == 'dm' && msg.content.substr(0,2) == '?>') {
-            check_pair_secret(msg.author,msg);  
-    }
+
     //Delete commands
     if(config.delete_commands)msg.delete();
     //Channel type
@@ -216,7 +220,7 @@ client .on('message',async (msg)=>{
 
 });
 
-client .on('guildMemberAdd',(member)=> {
+client.on('guildMemberAdd',(member)=> {
     member.send('\
     Hej,' + member.user.tag + ' na serwerze \r\t```' + member.guild.name + '```\r\t\
 Posiadamy system weryfikacji kont\r\t\
