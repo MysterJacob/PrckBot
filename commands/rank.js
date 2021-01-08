@@ -48,10 +48,9 @@ module.exports.run = function(client , msg, args,config,database_connection) {
         embed.setDescription('Obecny status ' + (db_IsOnline ? ':green_circle:Online' : ':red_circle:Offline'));
         embed.addField('Ostatni raz na serwerze',db_DateOfLastJoin.slice(0,db_DateOfLastJoin.length - 5).replace('T',' | '),true);
         embed.addField('Pierwszy raz na serwerze',db_DateOfFirstJoin.slice(0,db_DateOfLastJoin.length - 5).replace('T',' | '),true);
-        let progressbar = '|' + calcluateExpNeededForLevel(db_Level - 1).toString() + '|';
+        let progressbar = '|0|';
         const progressbarsize = 25;
-        const expatthislevel = db_ExperiencePoints - calcluateExpNeededForLevel(db_Level - 1);
-        const playerprogress = expatthislevel / calcluateExpNeededForLevel(db_Level);
+        const playerprogress = db_ExperiencePoints / calcluateExpNeededForLevel(db_Level);
         for(let i = 0 ;i < progressbarsize;i++) {
             const progressbarprogress = i / progressbarsize;
             progressbar += ((playerprogress > progressbarprogress) ? '=' : '-');
@@ -71,10 +70,22 @@ function clamp(value) {
     return value;
 }
 function calcluateExpNeededForLevel(level) {
-    if(level < 0) {
+    if(level >= 0 && level <= 15)
+    {
+        return 2*level + 8
+    }
+    else if(level >= 16 && level <= 30)
+    {
+        return 5*level-37
+    }
+    else if(level >= 31)
+    {
+        return 9*level-157
+    }
+    else
+    {
         return 0;
     }
-    return 400 + (level * 632) + (level * level) * 2;
 }
 module.exports.config = {
     name:'rank',
